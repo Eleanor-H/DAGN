@@ -2,7 +2,7 @@
 
 Official implementation for the NAACL'21 short paper [DAGN: Discourse-Aware Graph Network for Logical Reasoning](https://arxiv.org/abs/2103.14349). 
 
-![image](https://github.com/Eleanor-H/DAGN/blob/main/fig/DAGN.pdf)
+![image](https://github.com/Eleanor-H/DAGN/raw/main/fig/DAGN.pdf)
 
 
 ## Requirements
