@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-export ROOT_DIR=/dockerdata/wengeliu
+export ROOT_DIR=/data2/yinyahuang
 export RECLOR_DIR=reclor_data
 export TASK_NAME=reclor
 export MODEL_DIR=$ROOT_DIR/BERT_MODELS/roberta-large-uncased
