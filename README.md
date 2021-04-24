@@ -11,8 +11,20 @@ Official implementation for the NAACL'21 short paper [DAGN: Discourse-Aware Grap
 * tqdm
 
 
-## Results
-|    |Dev|Test|Test-E|Test-H|
-|----|:----:|:----:|:----:|:----:|
-| DAGN       | 65.20 | 58.20 | 76.14 | 44.11 |
-| DAGN (Aug) | 65.80 | 58.30 | 75.91 | 44.46 | 
+## How to Run
+Download the pre-trained RoBERTa model (including the files and the model) [here](https://huggingface.co/models?filter=roberta), and put them into `roberta-large`. Then run:
+```
+sh run_dagn.sh
+sh run_dagn_aug.sh
+```
+
+## Citation
+If any part of our paper or code is helpful, please gnerously cite with:
+```
+@InProceedings{zhang2021video,
+author = {Huang, Yinya and Fang, Meng and Cao, Yu and Wang, Liwei and Liang, Xiaodan},
+title = {DAGN: Discourse-Aware Graph Network for Logical Reasoning},
+booktitle = {NAACL},
+year = {2021}
+} 
+```
