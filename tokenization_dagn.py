@@ -313,55 +313,6 @@ if __name__ == '__main__':
     with open('./graph_building_blocks/explicit_arg_set_v4.json', 'r') as f:
         relations = json.load(f)  # key: relations, value: ignore
 
-    # text = 'The position that punishment should be proportional to how serious the offense is but that repeat ' \
-    #        'offenders should receive harsher punishments than first-time offenders is unsustainable. ' \
-    #        'It implies that considerations as remote as what an offender did years ago are relevant ' \
-    #        'to the seriousness of an offense. If such remote considerations were relevant, ' \
-    #        'almost every other consideration would be too. But this would make determining ' \
-    #        'the seriousness of an offense so difficult that it would be impossible to apply ' \
-    #        'the proportionality principle.'
-
-    # text = 'A recent study monitored the blood pressure of people petting domestic animals in the laboratory. ' \
-    #        'The blood pressure of some of these people lowered while petting the animals. Ttherefore, ' \
-    #        'for any one of the people so affected, owning a pet would result in that person having a lower average ' \
-    #        'blood pressure.'
-    #
-    # option = 'Since riding in a boat for a few minutes is relaxing for some people, ' \
-    #          'those people would be more relaxed generally if those people owned boats.'
-
-    # text = 'Recently, a report commissioned by a confectioners trade association noted that chocolate, formerly ' \
-    #        'considered a health scourge, is an effective antioxidant and so has health benefits. Another earlier ' \
-    #        'claim was that oily foods clog arteries, leading to heart disease, yet reports now state that olive oil ' \
-    #        'has a positive influence on the circulatory system. From these examples, it is clear that if you wait ' \
-    #        'ong enough, almost any food will be reported to be healthful.'
-
-    # option = 'Everyone with an office on the second floor works directly for the president and, as a result, no one ' \
-    #          'with a second floor office will take a July vacation because no one who works for the president will ' \
-    #          'be able to take time off during July.'
-
-    # text = 'In Rubaria, excellent health care is available to virtually the entire population, whereas very few ' \
-    #        'people in Terland receive adequate medical care. Yet, although the death rate for most diseases is ' \
-    #        'higher in Terland than in Rubaria, the percentage of the male population that dies from prostate cancer ' \
-    #        'is significantly higher in Rubaria than in Terland.'
-
-    # text = 'Rye sown in the fall and plowed into the soil in early spring leaves a residue that is highly effective ' \
-    #        'at controlling broad-leaved weeds, but unfortunately for only about 45 days. No major agricultural crop ' \
-           # 'matures from seed in as little as 45 days. Synthetic herbicides, on the other hand, although not any ' \
-           # 'longer-lasting, can be reapplied as the crop grows. Clearly, ttherefore, for major agricultural crops, ' \
-           # 'plowing rye into the soil can play no part in effective weed control.'
-
-    # text = 'Economist: In free market systems, the primary responsibility of corporate executives is to determine ' \
-    #        'a nation\' s industrial technology, the pattern of work organization, location of industry, and resource ' \
-    #        'allocation. They also are the decision makers, though subject to significant consumer control, on what ' \
-    #        'is to be produced and in what quantities. In short, a large category of major decisions is turned over ' \
-    #        'to business executives. Thus, business executives have become public officials.'
-
-    # text = '"The rate at which a road wears depends on various factors, including climate, amount of traffic, and ' \
-    #        'the size and weight of the vehicles using it. The only land transportation to Rittland\'s seaport ' \
-    #        'is via a divided highway, one side carrying traffic to the seaport and one carrying traffic away from ' \
-    #        'it. The side leading to the seaport has worn faster, even though each side has carried virtually the ' \
-    #        'same amount of traffic, consisting mainly of large trucks.'
-
     text = 'Until he was dismissed amid great controversy, Hastings was considered one of the greatest intelligence ' \
            'agents of all time. It is clear that if his dismissal was justified, then Hastings was either ' \
            'incompetent or else disloyal. Soon after the dismissal, however, it was shown that he had never been ' \
@@ -371,8 +322,5 @@ if __name__ == '__main__':
              'with a second floor office will take a July vacation because no one who works for the president will ' \
              'be able to take time off during July.'
 
-    # set_argument = {"turn"}
-    # set_domain = {"pain", "normal", "medic", "cell", "injuri", "hormon", "protein", "reaction", "caus", "turn",
-    #               "function", "bodi", "releas", "contain", "healthi", "attack", "activ", "immun", "infect"}
 
     main(text, option)
