@@ -12,7 +12,6 @@ Official implementation for the NAACL'21 short paper [DAGN: Discourse-Aware Grap
 
 
 ## How to Run
-Download the pre-trained RoBERTa model (including the files and the model) [here](https://huggingface.co/models?filter=roberta), and put them into `roberta-large`. Then run:
 ```
 sh run_dagn.sh
 sh run_dagn_aug.sh
