@@ -18,7 +18,7 @@ sh run_dagn_aug.sh
 ```
 
 ## Citation
-If any part of our paper or code is helpful, please gnerously cite with:
+If any part of our paper or code is helpful, please generously cite with:
 ```
 @InProceedings{zhang2021video,
 author = {Huang, Yinya and Fang, Meng and Cao, Yu and Wang, Liwei and Liang, Xiaodan},
