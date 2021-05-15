@@ -6,8 +6,8 @@ export MODEL_TYPE=argument_numnet
 export GRAPH_VERSION=4
 export DATA_PROCESSING_VERSION=32
 export MODEL_VERSION=2132
-export GNN_VERSION=GCN
-export SAVE_DIR=dagn
+export GNN_VERSION=GCN_reversededges_double
+export SAVE_DIR=dagn_aug
 
 CUDA_VISIBLE_DEVICES=3 python run_multiple_choice.py \
     --disable_tqdm \
