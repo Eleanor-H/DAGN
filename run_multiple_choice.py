@@ -266,6 +266,7 @@ def main():
         hidden_size=config.hidden_size,
         dropout_prob=model_args.numnet_drop,
         use_gcn=model_args.use_gcn,
+        use_pool=model_args.use_pool,
         gcn_steps=model_args.gcn_steps
     )
 
