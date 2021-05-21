@@ -23,7 +23,6 @@ CUDA_VISIBLE_DEVICES=3 python run_multiple_choice.py \
     --model_version $MODEL_VERSION \
     --merge_type 4 \
     --gnn_version $GNN_VERSION \
-    --use_pool \
     --use_gcn \
     --gcn_steps 2 \
     --max_seq_length 256 \
