@@ -14,8 +14,8 @@ gensim==3.8.3
 ```
 
 ## Preparation
-Download the [ReClor data](https://whyu.me/reclor/#download) and put them into `./reclor_data`.
-Download the [LogiQA data](https://github.com/lgw863/LogiQA-dataset) and put them into `./logiqa_data`.
+The [ReClor data](https://whyu.me/reclor/#download) is ready in the `./reclor_data`.
+To run the [LogiQA data](https://github.com/lgw863/LogiQA-dataset), create `./logiqa_data` where you put the downloaded data.
 
 
 ## Run pre-trained LM baseline
