@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
-export RECLOR_DIR=reclor_data
-export TASK_NAME=reclor
+export RECLOR_DIR=logiqa_data
+export TASK_NAME=logiqa
 export MODEL_DIR=roberta-large
 export MODEL_TYPE=DAGN
 export GRAPH_VERSION=4
 export DATA_PROCESSING_VERSION=32
 export MODEL_VERSION=2132
-export GNN_VERSION=GCN
-export SAVE_DIR=dagn
+export GNN_VERSION=GCN_reversededges_double
+export SAVE_DIR=dagn_aug
 
 CUDA_VISIBLE_DEVICES=0 python3 run_multiple_choice.py \
     --disable_tqdm \
@@ -30,7 +30,7 @@ CUDA_VISIBLE_DEVICES=0 python3 run_multiple_choice.py \
     --per_device_eval_batch_size 4 \
     --per_device_train_batch_size 4 \
     --gradient_accumulation_steps 4 \
-    --roberta_lr 5e-6 \
+    --roberta_lr 1e-5 \
     --gcn_lr 5e-6 \
     --proj_lr 5e-6 \
     --num_train_epochs 10 \
@@ -39,4 +39,5 @@ CUDA_VISIBLE_DEVICES=0 python3 run_multiple_choice.py \
     --logging_steps 200 \
     --save_steps 200 \
     --adam_epsilon 1e-6 \
-    --weight_decay 0.01
+    --weight_decay 0.01 \
+    --numnet_drop 0.2

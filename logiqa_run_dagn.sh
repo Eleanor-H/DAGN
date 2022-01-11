@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-export RECLOR_DIR=reclor_data
-export TASK_NAME=reclor
+export RECLOR_DIR=logiqa_data
+export TASK_NAME=logiqa
 export MODEL_DIR=roberta-large
 export MODEL_TYPE=DAGN
 export GRAPH_VERSION=4
@@ -39,4 +39,5 @@ CUDA_VISIBLE_DEVICES=0 python3 run_multiple_choice.py \
     --logging_steps 200 \
     --save_steps 200 \
     --adam_epsilon 1e-6 \
-    --weight_decay 0.01
+    --weight_decay 0.01 \
+    --numnet_drop 0.2

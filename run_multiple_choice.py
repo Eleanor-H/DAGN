@@ -40,7 +40,7 @@ from collections import Counter
 
 from dagn import DAGN
 from tokenization_dagn import arg_tokenizer
-from utils_multiple_choice import Split, MyMultipleChoiceDataset
+# from utils_multiple_choice import Split, MyMultipleChoiceDataset
 from graph_building_blocks.argument_set_punctuation_v4 import punctuations
 with open('./graph_building_blocks/explicit_arg_set_v4.json', 'r') as f:
     relations = json.load(f)  # key: relations, value: ignore
@@ -75,7 +75,7 @@ class ModelArguments:
     )
     model_type: str = field(
         metadata={"help": "Model types: roberta_large | argument_numnet | ..."},
-        default=None
+        default="DAGN"
     )
     merge_type: int = field(
         default=1,
@@ -253,80 +253,133 @@ def main():
         else:
             max_rel_id = 0
     else: raise Exception
-    model = DAGN.from_pretrained(
-        model_args.model_name_or_path,
-        from_tf=bool(".ckpt" in model_args.model_name_or_path),
-        config=config,
-        token_encoder_type="roberta" if "roberta" in model_args.model_name_or_path else "bert",
-        init_weights=model_args.init_weights,
-        max_rel_id=max_rel_id,
-        merge_type=model_args.merge_type,
-        gnn_version=model_args.gnn_version,
-        cache_dir=model_args.cache_dir,
-        hidden_size=config.hidden_size,
-        dropout_prob=model_args.numnet_drop,
-        use_gcn=model_args.use_gcn,
-        use_pool=model_args.use_pool,
-        gcn_steps=model_args.gcn_steps
-    )
+
+    if model_args.model_type == "PLM":
+        from utils_multiple_choice_plm import Split, MultipleChoiceDataset
+        model = AutoModelForMultipleChoice.from_pretrained(
+            model_args.model_name_or_path,
+            from_tf=bool(".ckpt" in model_args.model_name_or_path),
+            config=config,
+            cache_dir=model_args.cache_dir,
+        )
+        train_dataset = (
+            MultipleChoiceDataset(
+                data_dir=data_args.data_dir,
+                tokenizer=tokenizer,
+                task=data_args.task_name,
+                max_seq_length=data_args.max_seq_length,
+                overwrite_cache=data_args.overwrite_cache,
+                mode=Split.train,
+                demo=data_args.demo_data
+            )
+            if training_args.do_train
+            else None
+        )
+        eval_dataset = (
+            MultipleChoiceDataset(
+                data_dir=data_args.data_dir,
+                tokenizer=tokenizer,
+                task=data_args.task_name,
+                max_seq_length=data_args.max_seq_length,
+                overwrite_cache=data_args.overwrite_cache,
+                mode=Split.dev,
+                demo=data_args.demo_data
+            )
+            if training_args.do_eval
+            else None
+        )
+        test_dataset = (
+            MultipleChoiceDataset(
+                data_dir=data_args.data_dir,
+                tokenizer=tokenizer,
+                task=data_args.task_name,
+                max_seq_length=data_args.max_seq_length,
+                overwrite_cache=data_args.overwrite_cache,
+                mode=Split.test,
+                demo=data_args.demo_data
+            )
+            if training_args.do_predict
+            else None
+        )
+    elif model_args.model_type == "DAGN":
+        from utils_multiple_choice import Split, MyMultipleChoiceDataset
+        model = DAGN.from_pretrained(
+            model_args.model_name_or_path,
+            from_tf=bool(".ckpt" in model_args.model_name_or_path),
+            config=config,
+            token_encoder_type="roberta" if "roberta" in model_args.model_name_or_path else "bert",
+            init_weights=model_args.init_weights,
+            max_rel_id=max_rel_id,
+            merge_type=model_args.merge_type,
+            gnn_version=model_args.gnn_version,
+            cache_dir=model_args.cache_dir,
+            hidden_size=config.hidden_size,
+            dropout_prob=model_args.numnet_drop,
+            use_gcn=model_args.use_gcn,
+            use_pool=model_args.use_pool,
+            gcn_steps=model_args.gcn_steps
+        )
+
+        train_dataset = (
+            MyMultipleChoiceDataset(
+                data_dir=data_args.data_dir,
+                tokenizer=tokenizer,
+                arg_tokenizer=arg_tokenizer,
+                data_processing_version=data_args.data_processing_version,
+                graph_building_block_version=data_args.graph_building_block_version,
+                relations=relations,
+                punctuations=punctuations,
+                task=data_args.task_name,
+                max_seq_length=data_args.max_seq_length,
+                overwrite_cache=data_args.overwrite_cache,
+                mode=Split.train,
+                demo=data_args.demo_data
+            )
+            if training_args.do_train
+            else None
+        )
+        eval_dataset = (
+            MyMultipleChoiceDataset(
+                data_dir=data_args.data_dir,
+                tokenizer=tokenizer,
+                arg_tokenizer=arg_tokenizer,
+                data_processing_version=data_args.data_processing_version,
+                graph_building_block_version=data_args.graph_building_block_version,
+                relations=relations,
+                punctuations=punctuations,
+                task=data_args.task_name,
+                max_seq_length=data_args.max_seq_length,
+                max_ngram=data_args.max_ngram,
+                overwrite_cache=data_args.overwrite_cache,
+                mode=Split.dev,
+                demo=data_args.demo_data
+            )
+            if training_args.do_eval
+            else None
+        )
+        test_dataset = (
+            MyMultipleChoiceDataset(
+                data_dir=data_args.data_dir,
+                tokenizer=tokenizer,
+                arg_tokenizer=arg_tokenizer,
+                data_processing_version=data_args.data_processing_version,
+                graph_building_block_version=data_args.graph_building_block_version,
+                relations=relations,
+                punctuations=punctuations,
+                task=data_args.task_name,
+                max_seq_length=data_args.max_seq_length,
+                max_ngram=data_args.max_ngram,
+                overwrite_cache=data_args.overwrite_cache,
+                mode=Split.test,
+                demo=data_args.demo_data
+            )
+            if training_args.do_predict
+            else None
+        )
+    else:
+        raise Exception
 
 
-    train_dataset = (
-        MyMultipleChoiceDataset(
-            data_dir=data_args.data_dir,
-            tokenizer=tokenizer,
-            arg_tokenizer=arg_tokenizer,
-            data_processing_version=data_args.data_processing_version,
-            graph_building_block_version=data_args.graph_building_block_version,
-            relations=relations,
-            punctuations=punctuations,
-            task=data_args.task_name,
-            max_seq_length=data_args.max_seq_length,
-            overwrite_cache=data_args.overwrite_cache,
-            mode=Split.train,
-            demo=data_args.demo_data
-        )
-        if training_args.do_train
-        else None
-    )
-    eval_dataset = (
-        MyMultipleChoiceDataset(
-            data_dir=data_args.data_dir,
-            tokenizer=tokenizer,
-            arg_tokenizer=arg_tokenizer,
-            data_processing_version=data_args.data_processing_version,
-            graph_building_block_version=data_args.graph_building_block_version,
-            relations=relations,
-            punctuations=punctuations,
-            task=data_args.task_name,
-            max_seq_length=data_args.max_seq_length,
-            max_ngram=data_args.max_ngram,
-            overwrite_cache=data_args.overwrite_cache,
-            mode=Split.dev,
-            demo=data_args.demo_data
-        )
-        if training_args.do_eval
-        else None
-    )
-    test_dataset = (
-        MyMultipleChoiceDataset(
-            data_dir=data_args.data_dir,
-            tokenizer=tokenizer,
-            arg_tokenizer=arg_tokenizer,
-            data_processing_version=data_args.data_processing_version,
-            graph_building_block_version=data_args.graph_building_block_version,
-            relations=relations,
-            punctuations=punctuations,
-            task=data_args.task_name,
-            max_seq_length=data_args.max_seq_length,
-            max_ngram=data_args.max_ngram,
-            overwrite_cache=data_args.overwrite_cache,
-            mode=Split.test,
-            demo=data_args.demo_data
-        )
-        if training_args.do_predict
-        else None
-        )
 
 
     def compute_metrics(p: EvalPrediction) -> Dict:

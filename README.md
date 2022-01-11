@@ -13,11 +13,25 @@ numpy==1.19.2
 gensim==3.8.3
 ```
 
+## Preparation
+Download the [ReClor data](https://whyu.me/reclor/#download) and put them into `./reclor_data`.
+Download the [LogiQA data](https://github.com/lgw863/LogiQA-dataset) and put them into `./logiqa_data`.
 
-## How to Run
+
+## Run pre-trained LM baseline
+```
+sh run_roberta_large.sh
+
+sh logiqa_run_roberta_large.sh
+```
+
+## Run DAGN
 ```
 sh run_dagn.sh
 sh run_dagn_aug.sh
+
+sh logiqa_run_dagn.sh
+sh logiqa_run_dagn_aug.sh
 ```
 
 ## Citation

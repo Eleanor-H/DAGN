@@ -2,14 +2,14 @@
 export RECLOR_DIR=reclor_data
 export TASK_NAME=reclor
 export MODEL_DIR=roberta-large
-export MODEL_TYPE=argument_numnet
+export MODEL_TYPE=DAGN
 export GRAPH_VERSION=4
 export DATA_PROCESSING_VERSION=32
 export MODEL_VERSION=2132
 export GNN_VERSION=GCN_reversededges_double
 export SAVE_DIR=dagn_aug
 
-CUDA_VISIBLE_DEVICES=3 python run_multiple_choice.py \
+CUDA_VISIBLE_DEVICES=0 python3 run_multiple_choice.py \
     --disable_tqdm \
     --task_name $TASK_NAME \
     --model_type $MODEL_TYPE \
@@ -17,6 +17,7 @@ CUDA_VISIBLE_DEVICES=3 python run_multiple_choice.py \
     --init_weights \
     --do_train \
     --do_eval \
+    --do_predict \
     --data_dir $RECLOR_DIR \
     --graph_building_block_version $GRAPH_VERSION \
     --data_processing_version $DATA_PROCESSING_VERSION \
