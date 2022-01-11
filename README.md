@@ -21,7 +21,6 @@ Download the [LogiQA data](https://github.com/lgw863/LogiQA-dataset) and put the
 ## Run pre-trained LM baseline
 ```
 sh run_roberta_large.sh
-
 sh logiqa_run_roberta_large.sh
 ```
 
