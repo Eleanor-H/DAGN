@@ -39,6 +39,7 @@ from collections import Counter
 
 
 from dagn import DAGN
+from extended_dagns import ExtendedDAGNs
 from tokenization_dagn import arg_tokenizer
 # from utils_multiple_choice import Split, MyMultipleChoiceDataset
 from graph_building_blocks.argument_set_punctuation_v4 import punctuations
@@ -83,7 +84,7 @@ class ModelArguments:
     )
     gnn_version: str = field(
         default="",
-        metadata={"help": "GNN version in myutil.py or myutil_gat.py"
+        metadata={"help": "GNN version. "
                           "value = GCN|GCN_reversededges|GCN_reversededges_double"}
     )
     model_branch: bool = field(
@@ -301,9 +302,13 @@ def main():
             if training_args.do_predict
             else None
         )
-    elif model_args.model_type == "DAGN":
+    elif model_args.model_type in ("DAGN", "Extended_DAGNs"):
         from utils_multiple_choice import Split, MyMultipleChoiceDataset
-        model = DAGN.from_pretrained(
+        model_class = {
+            "DAGN": DAGN,
+            "Extended_DAGNs": ExtendedDAGNs
+        }[model_args.model_type]
+        model = model_class.from_pretrained(
             model_args.model_name_or_path,
             from_tf=bool(".ckpt" in model_args.model_name_or_path),
             config=config,

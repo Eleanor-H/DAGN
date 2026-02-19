@@ -313,6 +313,140 @@ class LogiQAProcessor(DataProcessor):
         return examples
 
 
+
+class LogiQACNProcessor(DataProcessor):
+    """ Processor for the LogiQA Chinese data set. """
+
+    def get_demo_examples(self, data_dir):
+        logger.info("LOOKING AT {} demo".format(data_dir))
+        return self._create_examples(self._read_txt(os.path.join(data_dir, "10_zh_train.txt.txt")), "demo")
+
+    def get_train_examples(self, data_dir):
+        logger.info("LOOKING AT {} train".format(data_dir))
+        return self._create_examples(self._read_txt(os.path.join(data_dir, "zh_train.txt")), "train")
+
+    def get_dev_examples(self, data_dir):
+        logger.info("LOOKING AT {} dev".format(data_dir))
+        return self._create_examples(self._read_txt(os.path.join(data_dir, "zh_eval.txt")), "dev")
+
+    def get_test_examples(self, data_dir):
+        logger.info("LOOKING AT {} test".format(data_dir))
+        return self._create_examples(self._read_txt(os.path.join(data_dir, "zh_test.txt")), "test")
+
+    def get_labels(self):
+        return [0, 1, 2, 3]
+
+    def _read_txt(self, input_file):
+        with open(input_file, "r", encoding="utf-8") as f:
+            lines = f.readlines()
+        return lines
+
+    def _create_examples(self, lines, type):
+        """ LogiQA: each 8 lines is one data point.
+                The first line is blank line;
+                The second is right choice;
+                The third is context;
+                The fourth is question;
+                The remaining four lines are four options.
+        """
+        label_map = {"a": 0, "b": 1, "c": 2, "d": 3}
+        assert len(lines) % 8 ==0, 'len(lines)={}'.format(len(lines))
+        n_examples = int(len(lines) / 8)
+        examples = []
+        for i in range(n_examples):
+            label_str = lines[i*8+1].strip()
+            context = lines[i*8+2].strip()
+            question = lines[i*8+3].strip()
+            answers = lines[i*8+4 : i*8+8]
+
+            examples.append(
+                InputExample(
+                    example_id = " ",  # no example_id in LogiQA.
+                    question = question,
+                    contexts = [context, context, context, context],
+                    endings = [item.strip()[2:] for item in answers],
+                    label = label_map[label_str]
+                )
+            )
+        assert len(examples) == n_examples
+        return examples
+
+
+class MuTualProcessor(DataProcessor):
+    """ Processor for the MuTual data set."""
+
+    def __init__(self):
+        self.label_dict = {"A": 0, "B": 1, "C": 2, "D": 3}
+
+    def _read_txts(self, data_dir, mode, f_names):
+        '''
+        return: list[dict]
+        '''
+        examples = []
+        for fn in f_names:
+            with open(os.path.join(data_dir, mode, fn)) as f:
+                e = ast.literal_eval(f.read())
+                examples.append(e)
+        return examples
+
+    def get_train_demos(self, data_dir):
+        logger.info("LOOKING AT {} train".format(data_dir))
+        f_names = os.listdir(os.path.join(data_dir, "train"))
+        examples = self._create_examples(self._read_txts(data_dir, "train", f_names), "train")
+        return examples[:10]
+
+    def get_dev_demos(self, data_dir):
+        logger.info("LOOKING AT {} dev".format(data_dir))
+        f_names = os.listdir(os.path.join(data_dir, "dev"))
+        examples = self._create_examples(self._read_txts(data_dir, "dev", f_names), "dev")
+        return examples[:10]
+
+    def get_test_demos(self, data_dir):
+        logger.info("LOOKING AT {} test".format(data_dir))
+        f_names = os.listdir(os.path.join(data_dir, "test"))
+        examples = self._create_examples(self._read_txts(data_dir, "test", f_names), "test")
+        return examples[:10]
+
+    def get_train_examples(self, data_dir):
+        logger.info("LOOKING AT {} train".format(data_dir))
+        f_names = os.listdir(os.path.join(data_dir, "train"))
+        return self._create_examples(self._read_txts(data_dir, "train", f_names), "train")
+
+    def get_dev_examples(self, data_dir):
+        logger.info("LOOKING AT {} dev".format(data_dir))
+        f_names = os.listdir(os.path.join(data_dir, "dev"))
+        return self._create_examples(self._read_txts(data_dir, "dev", f_names), "dev")
+
+    def get_test_examples(self, data_dir):
+        logger.info("LOOKING AT {} test".format(data_dir))
+        f_names = os.listdir(os.path.join(data_dir, "test"))
+        return self._create_examples(self._read_txts(data_dir, "test", f_names), "test")
+
+    def get_labels(self):
+        """See base class."""
+        return [0, 1, 2, 3]
+
+    def _create_examples(self, lines, type):
+        """"""
+        examples = []
+        for d in lines:
+            context = d["article"]
+            answers = d["options"]
+            label = 0 if type == "test" else self.label_dict[d["answers"]]
+            id_string = d["id"]
+
+            examples.append(
+                InputExample(
+                    example_id=id_string,
+                    question="",
+                    contexts=[context, context, context, context],
+                    endings=[answers[0], answers[1], answers[2], answers[3]],
+                    label=label
+                )
+            )
+        return examples
+
+
 def convert_examples_to_arg_features(
     examples: List[InputExample],
     label_list: List[str],
@@ -399,7 +533,9 @@ def convert_examples_to_arg_features(
 
 
 processors = {
-    # "race": RaceProcessor, "swag": SwagProcessor, "arc": ArcProcessor, "syn": SynonymProcessor,
-              "reclor": ReclorProcessor, "logiqa": LogiQAProcessor}
+              "reclor": ReclorProcessor, 
+              "logiqa": LogiQAProcessor, "logiqa_cn": LogiQACNProcessor,
+              "mutual": MuTualProcessor, "mutual_plus": MuTualProcessor,
+    }
 MULTIPLE_CHOICE_TASKS_NUM_LABELS = {"race", 4, "swag", 4, "arc", 4, "syn", 5, "reclor", 4, "logiqa", 4}
 
